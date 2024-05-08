@@ -1,30 +1,39 @@
-import { useState } from "react";
+import { useController, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 
+const Input = ({ name, control, label }) => {
+  const { field } = useController({
+    name,
+    control,
+    rules: { required: true },
+    defaultValue: "",
+  });
+  return (
+    <TextInput
+      label={label}
+      mode="outlined"
+      value={field.value}
+      onChangeText={field.onChange}
+    />
+  );
+};
+
 export default function Login() {
-  const [textPass, setTextPass] = useState("");
-  const [textEmail, setTextEmail] = useState("");
+  const { handleSubmit, control } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
 
   return (
     <View style={styles.container}>
-      <TextInput
-        mode="outlined"
-        label="E-mail"
-        value={textEmail}
-        onChangeText={setTextEmail}
-      />
-      <TextInput
-        mode="outlined"
-        label="Senha"
-        textContentType="password"
-        value={textPass}
-        onChangeText={setTextPass}
-      />
+      <Input name="email" control={control} label="E-mail" />
+      <Input name="password" control={control} label="Senha" />
       <Button
         mode="contained"
         style={styles.btn}
-        onPress={() => console.log(textEmail, textPass)}
+        onPress={handleSubmit(onSubmit)}
       >
         Entrar
       </Button>
