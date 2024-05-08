@@ -1,26 +1,31 @@
-import { Image, StyleSheet, View, Text } from "react-native";
-import { TextInput, Button } from 'react-native-paper';
 import { useState } from "react";
-import Logo from "../../assets/logo.png";
+import { StyleSheet, View } from "react-native";
+import { Button, TextInput } from "react-native-paper";
 
 export default function Login() {
-  const [text, setText] = useState("");
+  const [textPass, setTextPass] = useState("");
+  const [textEmail, setTextEmail] = useState("");
 
   return (
     <View style={styles.container}>
       <TextInput
         mode="outlined"
         label="E-mail"
-        value={text}
-        onChangeText={() => setText(text)}
+        value={textEmail}
+        onChangeText={setTextEmail}
       />
       <TextInput
         mode="outlined"
         label="Senha"
-        value={text}
-        onChangeText={text => setText(text)}
+        textContentType="password"
+        value={textPass}
+        onChangeText={setTextPass}
       />
-      <Button mode="contained" style={styles.btn}>
+      <Button
+        mode="contained"
+        style={styles.btn}
+        onPress={() => console.log(textEmail, textPass)}
+      >
         Entrar
       </Button>
       <Button mode="outlined" style={styles.btn}>
@@ -39,6 +44,6 @@ const styles = StyleSheet.create({
     padding: 32,
   },
   btn: {
-    marginTop: 8
-  }
+    marginTop: 8,
+  },
 });
