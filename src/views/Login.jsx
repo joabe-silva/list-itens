@@ -1,6 +1,6 @@
 import { useController, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Button, TextInput, Text } from "react-native-paper";
 
 const Input = ({ name, control, label }) => {
   const { field } = useController({
@@ -20,7 +20,11 @@ const Input = ({ name, control, label }) => {
 };
 
 export default function Login() {
-  const { handleSubmit, control } = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
 
   const onSubmit = (data) => {
     console.log(data);
@@ -29,7 +33,9 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <Input name="email" control={control} label="E-mail" />
+      {errors.email && <Text>Email obrigatório.</Text>}
       <Input name="password" control={control} label="Senha" />
+      {errors.password && <Text>Senha obrigatória.</Text>}
       <Button
         mode="contained"
         style={styles.btn}
