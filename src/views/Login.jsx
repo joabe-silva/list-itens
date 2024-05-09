@@ -2,7 +2,10 @@ import { useController, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 import { Button, TextInput, Text } from "react-native-paper";
 
+import { login, register } from "../services/authentication.js"
+ 
 const Input = ({ name, control, label }) => {
+
   const { field } = useController({
     name,
     control,
@@ -20,14 +23,27 @@ const Input = ({ name, control, label }) => {
 };
 
 export default function Login() {
+
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onLoginSubmit = async (data) => {
+    const response = await login(data.email, data.password);
+
+    if (response) {
+      console.log(JSON.stringify(response));
+    }
+  };
+
+  const onRegisterSubmit = async (data) => {
+    const response = await register(data.email, data.password);
+
+    if (response) {
+      console.log(JSON.stringify(response));
+    }
   };
 
   return (
@@ -39,11 +55,11 @@ export default function Login() {
       <Button
         mode="contained"
         style={styles.btn}
-        onPress={handleSubmit(onSubmit)}
+        onPress={handleSubmit(onLoginSubmit)}
       >
         Entrar
       </Button>
-      <Button mode="outlined" style={styles.btn}>
+      <Button mode="outlined" style={styles.btn} onPress={handleSubmit(onRegisterSubmit)}>
         Cadastro
       </Button>
     </View>
