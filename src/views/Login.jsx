@@ -1,23 +1,24 @@
 import { useController, useForm } from "react-hook-form";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import { Button, TextInput, Text } from "react-native-paper";
-
 import { login, register } from "../services/authentication.js"
- 
-const Input = ({ name, control, label }) => {
+import Logo from "../../assets/logo.jpeg";
 
+const Input = ({ name, control, label, secureTextEntry }) => {
   const { field } = useController({
     name,
     control,
     rules: { required: true },
     defaultValue: "",
   });
+
   return (
     <TextInput
       label={label}
       mode="outlined"
       value={field.value}
       onChangeText={field.onChange}
+      secureTextEntry={secureTextEntry} 
     />
   );
 };
@@ -48,10 +49,14 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
+      <Image style={styles.tinyLogo} source={Logo} />
+
       <Input name="email" control={control} label="E-mail" />
       {errors.email && <Text>Email obrigatório.</Text>}
-      <Input name="password" control={control} label="Senha" />
+
+      <Input name="password" control={control} label="Senha" secureTextEntry={true} />
       {errors.password && <Text>Senha obrigatória.</Text>}
+
       <Button
         mode="contained"
         style={styles.btn}
@@ -59,7 +64,11 @@ export default function Login() {
       >
         Entrar
       </Button>
-      <Button mode="outlined" style={styles.btn} onPress={handleSubmit(onRegisterSubmit)}>
+
+      <Button 
+        mode="outlined" style={styles.btn} 
+        onPress={handleSubmit(onRegisterSubmit)}
+      >
         Cadastro
       </Button>
     </View>
@@ -68,8 +77,9 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   tinyLogo: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
+    alignSelf: 'center',
   },
   container: {
     padding: 32,
