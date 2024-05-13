@@ -1,10 +1,11 @@
-import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import {
   createUserWithEmailAndPassword,
+  getReactNativePersistence,
+  initializeAuth,
   signInWithEmailAndPassword,
-  signOut,
 } from "firebase/auth";
+import { Alert } from "react-native";
 import app from "../database/firebase.js";
 
 const auth = initializeAuth(app, {
@@ -21,27 +22,30 @@ const login = async (email, password) => {
     })
     .catch((error) => {
       const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorMessage);
+      if (errorCode === "auth/invalid-credential") {
+        Alert.alert("Email ou senha inválidos");
+      } else {
+        Alert.alert("Erro inesperado no login.");
+        console.log(errorCode);
+      }
     });
 };
 
 const register = async (email, password) => {
-  createUserWithEmailAndPassword(auth, email, password)
+  return createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed up
       const user = userCredential.user;
-      console.log(user);
       // ...
+      return user;
     })
-    .catch((err) => {
-      if (err.code === AuthErrorCodes.WEAK_PASSWORD) {
-        setError("A senha é muito fraca.");
-      } else if (err.code === AuthErrorCodes.EMAIL_EXISTS) {
-        setError("Email já cadastrado.");
+    .catch((error) => {
+      const errorCode = error.code;
+      if (errorCode === "auth/email-already-in-use") {
+        Alert.alert("Email já cadastrado.");
       } else {
-        console.log(err.code);
-        alert(err.code);
+        Alert.alert("Erro inesperado no cadastro.");
+        console.log(errorCode);
       }
     });
 };
