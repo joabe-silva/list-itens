@@ -10,6 +10,7 @@ import {
 import { Button, HelperText, TextInput } from "react-native-paper";
 import Logo from "../../assets/logo.png";
 import { login } from "../services/authentication.js";
+import useUserStore from "../stores/userStore.js";
 
 const Input = (props) => {
   const { name, control, label, secureTextEntry } = props;
@@ -41,6 +42,8 @@ const Input = (props) => {
 export default function Login() {
   const navigation = useNavigation();
 
+  const { setAuthenticatedUser, authenticatedUser } = useUserStore();
+
   const {
     handleSubmit,
     control,
@@ -51,7 +54,8 @@ export default function Login() {
     const response = await login(data.email, data.password);
 
     if (response) {
-      console.log(JSON.stringify(response));
+      setAuthenticatedUser(response);
+      //TODO redirect to authenticated user page
     }
   };
 
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   container: {
-    width: '100%',
+    width: "100%",
     padding: 32,
   },
   inpt: {
