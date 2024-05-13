@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { useController, useForm } from "react-hook-form";
 import {
   Alert,
@@ -45,6 +46,8 @@ const Input = ({ name, control, label, secureTextEntry }) => {
 };
 
 export default function Cadastro() {
+  const navigation = useNavigation();
+
   const {
     handleSubmit,
     control,
@@ -60,7 +63,8 @@ export default function Cadastro() {
     const response = await register(data.email, data.password);
 
     if (response) {
-      console.log(JSON.stringify(response));
+      Alert.alert("Cadastro realizado com sucesso.");
+      navigation.navigate("Login");
     }
   };
 
