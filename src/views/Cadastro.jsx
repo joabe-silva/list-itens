@@ -1,14 +1,35 @@
 import { useController, useForm } from "react-hook-form";
-import { StyleSheet, View, Image } from "react-native";
-import { Button, TextInput, Text } from "react-native-paper";
-import { register } from "../services/authentication.js"
+import {
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+import { Button, HelperText, TextInput } from "react-native-paper";
 import Logo from "../../assets/logo.png";
+import { register } from "../services/authentication";
+
+const isTheSamePassword = (pass1, pass2) => {
+  return String(pass1).localeCompare(pass2) === 0 ? true : false;
+};
 
 const Input = ({ name, control, label, secureTextEntry }) => {
   const { field } = useController({
     name,
     control,
-    rules: { required: true },
+    rules: {
+      required: { value: true, message: "Preenchimento obrigatório" },
+      pattern:
+        name == "email"
+          ? { value: /\S+@\S+\.\S+/, message: "Digite um email válido." }
+          : undefined,
+      minLength: {
+        value: name == "password" || name == "passwordSecond" ? 6 : undefined,
+        message: "Tamanho mínimo: 6 caracteres",
+      },
+    },
     defaultValue: "",
   });
 
@@ -18,13 +39,12 @@ const Input = ({ name, control, label, secureTextEntry }) => {
       mode="outlined"
       value={field.value}
       onChangeText={field.onChange}
-      secureTextEntry={secureTextEntry} 
+      secureTextEntry={secureTextEntry}
     />
   );
 };
 
 export default function Cadastro() {
-
   const {
     handleSubmit,
     control,
@@ -32,6 +52,11 @@ export default function Cadastro() {
   } = useForm();
 
   const onRegisterSubmit = async (data) => {
+    if (!isTheSamePassword(data.password, data.passwordSecond)) {
+      Alert.alert("As senhas não são iguais.");
+      return;
+    }
+
     const response = await register(data.email, data.password);
 
     if (response) {
@@ -40,26 +65,46 @@ export default function Cadastro() {
   };
 
   return (
-    <View style={styles.container}>
-      <Image style={styles.tinyLogo} source={Logo} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView style={styles.container}>
+        <Image style={styles.tinyLogo} source={Logo} />
 
-      <Input name="email" control={control} label="E-mail" />
-      {errors.email && <Text>Email obrigatório.</Text>}
+        <Input name="email" control={control} label="E-mail" />
+        {errors.email && (
+          <HelperText type="error">{errors.email.message}</HelperText>
+        )}
 
-      <Input name="password" control={control} label="Senha" secureTextEntry={true} />
-      {errors.password && <Text>Senha obrigatória.</Text>}
+        <Input
+          name="password"
+          control={control}
+          label="Senha"
+          secureTextEntry={true}
+        />
+        {errors.password && (
+          <HelperText type="error">{errors.password.message}</HelperText>
+        )}
 
-      <Input name="passwordSecond" control={control} label="Confirme sua senha" secureTextEntry={true} />
-      {errors.passwordSecond && <Text>Senha obrigatória.</Text>}
+        <Input
+          name="passwordSecond"
+          control={control}
+          label="Confirme sua senha"
+          secureTextEntry={true}
+        />
+        {errors.passwordSecond && (
+          <HelperText type="error">{errors.passwordSecond.message}</HelperText>
+        )}
 
-      <Button
-        mode="contained"
-        style={styles.btn}
-        onPress={handleSubmit(onRegisterSubmit)}
-      >
-        Salvar
-      </Button>
-    </View>
+        <Button
+          mode="contained"
+          style={styles.btn}
+          onPress={handleSubmit(onRegisterSubmit)}
+        >
+          Salvar
+        </Button>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -67,7 +112,7 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 200,
     height: 200,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   container: {
     padding: 32,
