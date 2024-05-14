@@ -55,7 +55,7 @@ export default function Login() {
 
     if (response) {
       setAuthenticatedUser(response);
-      //TODO redirect to authenticated user page
+      navigation.navigate("Inicio");
     }
   };
 
