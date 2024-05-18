@@ -11,6 +11,7 @@ import {
 import { Button, HelperText, TextInput } from "react-native-paper";
 import Logo from "../../assets/logo.png";
 import { register } from "../services/authentication";
+import { useState } from "react";
 
 const isTheSamePassword = (pass1, pass2) => {
   return String(pass1).localeCompare(pass2) === 0 ? true : false;
@@ -46,7 +47,9 @@ const Input = ({ name, control, label, secureTextEntry }) => {
 };
 
 export default function Cadastro() {
-  const navigation = useNavigation();
+  const { navigate } = useNavigation();
+
+  const [loading, setLoading] = useState(false);
 
   const {
     handleSubmit,
@@ -59,12 +62,14 @@ export default function Cadastro() {
       Alert.alert("As senhas não são iguais.");
       return;
     }
-
+    
+    setLoading(true);
     const response = await register(data.email, data.password);
+    setLoading(false);
 
     if (response) {
       Alert.alert("Cadastro realizado com sucesso.");
-      navigation.navigate("Login");
+      navigate("Login");
     }
   };
 
@@ -104,6 +109,7 @@ export default function Cadastro() {
           mode="contained"
           style={styles.btn}
           onPress={handleSubmit(onRegisterSubmit)}
+          loading={loading}
         >
           Salvar
         </Button>
