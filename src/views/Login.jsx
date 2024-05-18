@@ -11,6 +11,7 @@ import { Button, HelperText, TextInput } from "react-native-paper";
 import Logo from "../../assets/logo.png";
 import { login } from "../services/authentication.js";
 import useUserStore from "../stores/userStore.js";
+import { useState } from "react";
 
 const Input = (props) => {
   const { name, control, label, secureTextEntry } = props;
@@ -40,7 +41,9 @@ const Input = (props) => {
 };
 
 export default function Login() {
-  const navigation = useNavigation();
+  const { navigate } = useNavigation();
+
+  const [loading, setLoading] = useState(false);
 
   const { setAuthenticatedUser, authenticatedUser } = useUserStore();
 
@@ -51,11 +54,13 @@ export default function Login() {
   } = useForm();
 
   const onLoginSubmit = async (data) => {
+    setLoading(true);
     const response = await login(data.email, data.password);
+    setLoading(false);
 
     if (response) {
       setAuthenticatedUser(response);
-      navigation.navigate("Inicio");
+      navigate("Inicio");
     }
   };
 
@@ -86,6 +91,7 @@ export default function Login() {
           mode="contained"
           style={styles.btn}
           onPress={handleSubmit(onLoginSubmit)}
+          loading={loading}
         >
           Entrar
         </Button>
@@ -93,7 +99,7 @@ export default function Login() {
         <Button
           mode="outlined"
           style={styles.btnSecond}
-          onPress={() => navigation.navigate("Cadastro")}
+          onPress={() => navigate("Cadastro")}
         >
           Cadastro
         </Button>
