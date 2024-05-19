@@ -60,7 +60,7 @@ export default function Login() {
 
     if (response) {
       setAuthenticatedUser(response);
-      navigate("Inicio");
+      navigate("MainTab");
     }
   };
 
