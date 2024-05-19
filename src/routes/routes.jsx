@@ -7,6 +7,9 @@ import Ionicons from "@expo/vector-icons/Ionicons"
 import Cadastro from "../views/Cadastro";
 import Login from "../views/Login";
 import Inicio from "../views/Inicio";
+import Pendentes from "../views/Pendentes";
+import Concluidas from "../views/Concluidas";
+import Estatisticas from "../views/Estatisticas";
 
 const Stack = createStackNavigator();
 
@@ -19,6 +22,9 @@ const MainTab = () => {
           tabBarIcon: ({ focused, color, size }) => {
             let tabs = {
               Inicio: focused ? "home" : "home-outline",
+              Pendentes: focused ? "time" : "time-outline",
+              Concluidas: focused ? "checkmark-circle" : "checkmark-circle-outline",
+              Estatisticas: focused ? "stats-chart" : "stats-chart-outline",
             }
             // You can return any component that you like here!
             return <Ionicons name={tabs[route.name]} size={size} color={color} />;
@@ -28,6 +34,9 @@ const MainTab = () => {
         })}
       >
       <Tab.Screen name="Inicio" component={Inicio} />
+      <Tab.Screen name="Pendentes" component={Pendentes} />
+      <Tab.Screen name="Concluidas" component={Concluidas} />
+      <Tab.Screen name="Estatisticas" component={Estatisticas} />
     </Tab.Navigator>
   );
 }
