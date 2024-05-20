@@ -16,7 +16,7 @@ const useTarefasStore = create((set, get) => ({
   },
   saveTarefa: async (tarefa) => {
     const user = useUserStore.getState().authenticatedUser;
-    const newTarefa = {...tarefa, owner: user.uid}
+    const newTarefa = {...tarefa, owner: user.email}
     try {
       await novaTarefa(newTarefa);
       set((state) => ({tarefas: [...state.tarefas, newTarefa]}))

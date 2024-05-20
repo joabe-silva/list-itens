@@ -16,7 +16,7 @@ export const novaTarefa = async (tarefa) => {
 export const listarTarefasPorUsuario = async (usuario) => {
   let tarefas = [];
   try {
-    const q = query(tarefasRef, where("owner", "==", usuario.uid));
+    const q = query(tarefasRef, where("owner", "==", usuario.email));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots

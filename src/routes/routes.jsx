@@ -9,6 +9,7 @@ import Concluidas from "../views/Concluidas";
 import Estatisticas from "../views/Estatisticas";
 import Login from "../views/Login";
 import Pendentes from "../views/Pendentes";
+import Compartilhados from '../views/Compartilhados';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ const MainTab = () => {
             let tabs = {
               Pendentes: focused ? "time" : "time-outline",
               Concluidas: focused ? "checkmark-circle" : "checkmark-circle-outline",
+              Compartilhados: focused ? "share-social" : "share-social-outline",
               Estatisticas: focused ? "stats-chart" : "stats-chart-outline",
             }
             // You can return any component that you like here!
@@ -33,6 +35,7 @@ const MainTab = () => {
       >
       <Tab.Screen name="Pendentes" component={Pendentes} />
       <Tab.Screen name="Concluidas" component={Concluidas} />
+      <Tab.Screen name="Compartilhados" component={Compartilhados} />
       <Tab.Screen name="Estatisticas" component={Estatisticas} />
     </Tab.Navigator>
   );

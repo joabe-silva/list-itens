@@ -9,7 +9,7 @@ import { IconButton, Text } from "react-native-paper";
 import useTarefasStore from "../stores/tarefasStore";
 import { RefreshControl } from "react-native-gesture-handler";
 
-export default function Pendentes() {
+export default function Compartilhados() {
   const { tarefas, tarefasPendentes, fetchTarefas, saveTarefa, refreshing } = useTarefasStore();
 
   const [visibleTarefas, setVisibleTarefas] = useState([]);
@@ -51,7 +51,7 @@ export default function Pendentes() {
             share: [],
             flagCompleted: false,
           }
-          saveTarefa(tarefa); 
+          saveTarefa(tarefa);
         }}
       />
     </KeyboardAvoidingView>
