@@ -5,23 +5,12 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import { Text } from "react-native-paper";
+import { IconButton, Text } from "react-native-paper";
 import useTarefasStore from "../stores/tarefasStore";
+import { RefreshControl } from "react-native-gesture-handler";
 
 export default function Pendentes() {
-  const { tarefas, fetchTarefas } = useTarefasStore();
-
-  // const addTarefa = () => {
-  //   novaTarefa({
-  //     tittle: "Nova tarefa",
-  //     description: "Nova tarefa",
-  //     flagCompleted: false,
-  //     date: new Date(),
-  //     groups: [],
-  //     share: [],
-  //     owner: authenticatedUser.uid,
-  //   });
-  // };
+  const { tarefas, fetchTarefas, saveTarefa, refreshing } = useTarefasStore();
 
   useEffect(() => {
     fetchTarefas();
@@ -30,17 +19,24 @@ export default function Pendentes() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ height: "100%" }}
     >
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={fetchTarefas} />
+        }
+      >
         {tarefas.length > 0 &&
           tarefas.map((tarefa) => {
-            return (
-              <>
-                <Text key={tarefa.id}>{tarefa.description}</Text>
-              </>
-            );
+            return <Text key={tarefa.id}>{tarefa.description}</Text>;
           })}
       </ScrollView>
+      <IconButton
+        icon={"plus"}
+        style={styles.plusButton}
+        mode="contained"
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -53,8 +49,15 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 32,
+    flex: 1,
+    height: "100%",
   },
   btn: {
     marginTop: 16,
+  },
+  plusButton: {
+    position: "absolute",
+    right: "5%",
+    bottom: "5%",
   },
 });
