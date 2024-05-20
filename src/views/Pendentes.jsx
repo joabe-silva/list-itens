@@ -34,14 +34,25 @@ export default function Pendentes() {
         }
       >
         {visibleTarefas.length > 0 &&
-          visibleTarefas.map((tarefa) => {
-            return <Text key={tarefa.id}>{tarefa.description}</Text>;
+          visibleTarefas.map((tarefa, ix) => {
+            return <Text key={tarefa.ix}>{tarefa.description}</Text>;
           })}
       </ScrollView>
       <IconButton
         icon={"plus"}
         style={styles.plusButton}
         mode="contained"
+        onPress={() => {
+          const tarefa = {
+            description: "Nova tarefa",
+            title: 'Nova tarefa',
+            date: new Date(),
+            groups: [],
+            share: [],
+            flagCompleted: false,
+          }
+          saveTarefa(tarefa);
+        }}
       />
     </KeyboardAvoidingView>
   );

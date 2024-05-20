@@ -16,9 +16,10 @@ const useTarefasStore = create((set, get) => ({
   },
   saveTarefa: async (tarefa) => {
     const user = useUserStore.getState().authenticatedUser;
+    const newTarefa = {...tarefa, owner: user.uid}
     try {
-      await novaTarefa({...tarefa, owner: user.uid});
-      set((state) => ({tarefas: state.tarefas.push(tarefa)}))
+      await novaTarefa(newTarefa);
+      set((state) => ({tarefas: [...state.tarefas, newTarefa]}))
     } catch (error) {
       Alert.alert("Error", "Erro ao cadastrar tarefa");
     }
