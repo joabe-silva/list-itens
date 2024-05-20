@@ -6,14 +6,20 @@ import Ionicons from "@expo/vector-icons/Ionicons"
 
 import Cadastro from "../views/Cadastro";
 import Login from "../views/Login";
-import Inicio from "../views/Inicio";
 import Pendentes from "../views/Pendentes";
 import Concluidas from "../views/Concluidas";
 import Estatisticas from "../views/Estatisticas";
+import { IconButton } from "react-native-paper";
 
 const Stack = createStackNavigator();
 
 const Tab = createBottomTabNavigator();
+
+const addTarefaButton = () => {
+  return (
+    <IconButton icon={"plus"} mode="contained" size={36}/>
+  )
+}
 
 const MainTab = () => {
   return (
@@ -21,7 +27,6 @@ const MainTab = () => {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let tabs = {
-              Inicio: focused ? "home" : "home-outline",
               Pendentes: focused ? "time" : "time-outline",
               Concluidas: focused ? "checkmark-circle" : "checkmark-circle-outline",
               Estatisticas: focused ? "stats-chart" : "stats-chart-outline",
@@ -33,8 +38,7 @@ const MainTab = () => {
           tabBarInactiveTintColor: 'gray',
         })}
       >
-      <Tab.Screen name="Inicio" component={Inicio} />
-      <Tab.Screen name="Pendentes" component={Pendentes} />
+      <Tab.Screen name="Pendentes" component={Pendentes} options={{headerRight: addTarefaButton}}/>
       <Tab.Screen name="Concluidas" component={Concluidas} />
       <Tab.Screen name="Estatisticas" component={Estatisticas} />
     </Tab.Navigator>
