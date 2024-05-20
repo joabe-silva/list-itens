@@ -28,6 +28,10 @@ const useTarefasStore = create((set, get) => ({
     const tarefas = get().tarefas;
     return tarefas.filter((tarefa) =>!tarefa.flagCompleted);
   },
+  tarefasConcluidas: () => {
+    const tarefas = get().tarefas;
+    return tarefas.filter((tarefa) =>tarefa.flagCompleted);
+  },
 }));
 
 export default useTarefasStore;
