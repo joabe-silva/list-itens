@@ -4,7 +4,7 @@ import useUserStore from "./userStore";
 import { Alert } from "react-native";
 
 
-const useTarefasStore = create((set) => ({
+const useTarefasStore = create((set, get) => ({
   tarefas: [],
   refreshing: false,
   // setTarefas: (tarefas) => set({tarefas: tarefas}),
@@ -22,6 +22,10 @@ const useTarefasStore = create((set) => ({
     } catch (error) {
       Alert.alert("Error", "Erro ao cadastrar tarefa");
     }
+  },
+  tarefasPendentes: () => {
+    const tarefas = get().tarefas;
+    return tarefas.filter((tarefa) =>!tarefa.flagCompleted);
   },
 }));
 

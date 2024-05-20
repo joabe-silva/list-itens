@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -10,11 +10,17 @@ import useTarefasStore from "../stores/tarefasStore";
 import { RefreshControl } from "react-native-gesture-handler";
 
 export default function Pendentes() {
-  const { tarefas, fetchTarefas, saveTarefa, refreshing } = useTarefasStore();
+  const { tarefas, tarefasPendentes, fetchTarefas, saveTarefa, refreshing } = useTarefasStore();
+
+  const [visibleTarefas, setVisibleTarefas] = useState([]);
 
   useEffect(() => {
     fetchTarefas();
   }, []);
+
+  useEffect(() => {
+    setVisibleTarefas(tarefasPendentes());
+  }, [tarefas]);
 
   return (
     <KeyboardAvoidingView
@@ -27,8 +33,8 @@ export default function Pendentes() {
           <RefreshControl refreshing={refreshing} onRefresh={fetchTarefas} />
         }
       >
-        {tarefas.length > 0 &&
-          tarefas.map((tarefa) => {
+        {visibleTarefas.length > 0 &&
+          visibleTarefas.map((tarefa) => {
             return <Text key={tarefa.id}>{tarefa.description}</Text>;
           })}
       </ScrollView>
