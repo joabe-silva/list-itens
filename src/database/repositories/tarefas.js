@@ -29,3 +29,20 @@ export const listarTarefasPorUsuario = async (usuario) => {
     return tarefas;
   }
 };
+
+export const listarTarefasCompartilhadas = async (usuario) => {
+  let tarefas = [];
+  try {
+    const q = query(tarefasRef, where('share', 'array-contains', usuario.email));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      tarefas.push({...doc.data(), id: doc.id});
+    });
+    //TODO
+  } catch (e) {
+    console.error("Error fetching documents: ", e);
+  } finally {
+    return tarefas;
+  }
+};

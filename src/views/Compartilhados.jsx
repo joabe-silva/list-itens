@@ -10,17 +10,11 @@ import useTarefasStore from "../stores/tarefasStore";
 import { RefreshControl } from "react-native-gesture-handler";
 
 export default function Compartilhados() {
-  const { tarefas, tarefasPendentes, fetchTarefas, saveTarefa, refreshing } = useTarefasStore();
-
-  const [visibleTarefas, setVisibleTarefas] = useState([]);
+  const { tarefasCompartilhadasComigo, fetchTarefasCompartilhadasComigo, refreshing } = useTarefasStore();
 
   useEffect(() => {
-    fetchTarefas();
+    fetchTarefasCompartilhadasComigo();
   }, []);
-
-  useEffect(() => {
-    setVisibleTarefas(tarefasPendentes());
-  }, [tarefas]);
 
   return (
     <KeyboardAvoidingView
@@ -30,12 +24,12 @@ export default function Compartilhados() {
       <ScrollView
         style={styles.container}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={fetchTarefas} />
+          <RefreshControl refreshing={refreshing} onRefresh={fetchTarefasCompartilhadasComigo} />
         }
       >
-        {visibleTarefas.length > 0 &&
-          visibleTarefas.map((tarefa, ix) => {
-            return <Text key={tarefa.ix}>{tarefa.description}</Text>;
+        {tarefasCompartilhadasComigo.length > 0 &&
+          tarefasCompartilhadasComigo.map((tarefa, ix) => {
+            return <Text key={ix}>{tarefa.title}</Text>;
           })}
       </ScrollView>
       <IconButton

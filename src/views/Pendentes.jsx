@@ -35,7 +35,7 @@ export default function Pendentes() {
       >
         {visibleTarefas.length > 0 &&
           visibleTarefas.map((tarefa, ix) => {
-            return <Text key={tarefa.ix}>{tarefa.description}</Text>;
+            return <Text key={ix}>{tarefa.title}</Text>;
           })}
       </ScrollView>
       <IconButton
