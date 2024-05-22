@@ -6,7 +6,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  View
+  View,
 } from "react-native";
 import {
   Button,
@@ -60,9 +60,8 @@ const Input = ({
   );
 };
 
-export default function EditaTarefa({navigation}) {
-
-  const {saveTarefa} = useTarefasStore();
+export default function EditaTarefa({ navigation }) {
+  const { saveTarefa } = useTarefasStore();
 
   // const { navigate } = useNavigation();
 
@@ -91,13 +90,14 @@ export default function EditaTarefa({navigation}) {
     handleSubmit,
     control,
     setValue,
+    getValues,
     register,
     watch,
     formState: { errors },
   } = useForm();
 
   const onRegisterSubmit = async (data) => {
-    const newTarefa = { ...data, share: share, groups: groups }
+    const newTarefa = { ...data, share: share, groups: groups };
     console.log(newTarefa);
     setLoading(true);
     const response = await saveTarefa(newTarefa);
@@ -113,7 +113,7 @@ export default function EditaTarefa({navigation}) {
     ? new Date(watch("date")).toLocaleDateString("pt-br")
     : "";
 
-  useEffect(() => setValue('flagCompleted', false), []);
+  useEffect(() => setValue("flagCompleted", false), []);
 
   return (
     <KeyboardAvoidingView
@@ -187,6 +187,7 @@ export default function EditaTarefa({navigation}) {
             label="Compartilhar com:"
             onChangeText={setShareWith}
             mode="outlined"
+            value={shareWith}
           />
 
           <Button
@@ -226,6 +227,7 @@ export default function EditaTarefa({navigation}) {
 
           <TextInput
             label="Adicionar grupo:"
+            value={groupInput}
             onChangeText={setGroupInput}
             mode="outlined"
           />
@@ -237,10 +239,7 @@ export default function EditaTarefa({navigation}) {
                 setGroups([...groups, groupInput]);
                 setGroupInput("");
               } else {
-                Alert.alert(
-                  "Atenção",
-                  "Digite uma categoria para a tarefa."
-                );
+                Alert.alert("Atenção", "Digite uma categoria para a tarefa.");
               }
             }}
           >
