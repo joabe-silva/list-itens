@@ -46,10 +46,10 @@ export default function Routes() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="EditaTarefa" component={EditaTarefa} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Cadastro" component={Cadastro} />
         <Stack.Screen name="MainTab" component={MainTab} options={{headerShown: false}} />
+        <Stack.Screen name="EditaTarefa" component={EditaTarefa} />
       </Stack.Navigator>
     </NavigationContainer>
   );

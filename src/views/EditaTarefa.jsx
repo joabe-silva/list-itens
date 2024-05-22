@@ -1,31 +1,24 @@
 import { useNavigation } from "@react-navigation/native";
-import { Controller, useController, useForm } from "react-hook-form";
+import { useController, useForm } from "react-hook-form";
 import {
   Alert,
-  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
-  View,
+  View
 } from "react-native";
 import {
   Button,
   Chip,
-  Switch,
   HelperText,
+  Switch,
   Text,
   TextInput,
 } from "react-native-paper";
-import Logo from "../../assets/logo.png";
-// import { register } from "../services/authentication";
 import { useEffect, useState } from "react";
 import DateTimePicker from "react-native-modal-datetime-picker";
-import { getValue } from "firebase/remote-config";
-
-// const isTheSamePassword = (pass1, pass2) => {
-//   return String(pass1).localeCompare(pass2) === 0 ? true : false;
-// };
+import useTarefasStore from "../stores/tarefasStore";
 
 const Input = ({
   name,
@@ -67,48 +60,60 @@ const Input = ({
   );
 };
 
-export default function EditaTarefa() {
-  const { navigate } = useNavigation();
+export default function EditaTarefa({navigation}) {
+
+  const {saveTarefa} = useTarefasStore();
+
+  // const { navigate } = useNavigation();
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const [share, setShare] = useState([]);
+  const [shareWith, setShareWith] = useState("");
+
+  const [groups, setGroups] = useState([]);
+  const [groupInput, setGroupInput] = useState("");
+
   const removeShare = (index) => {
     const copy = Array.from(share);
     copy.splice(index, 1);
     setShare(copy);
   };
 
+  const removeGroup = (index) => {
+    const copy = Array.from(groups);
+    copy.splice(index, 1);
+    setGroups(copy);
+  };
+
   const {
     handleSubmit,
     control,
     setValue,
-    getValues,
     register,
     watch,
     formState: { errors },
   } = useForm();
 
   const onRegisterSubmit = async (data) => {
-    console.log(data);
-    // if (!isTheSamePassword(data.password, data.passwordSecond)) {
-    //   Alert.alert("As senhas não são iguais.");
-    //   return;
-    // }
-    // setLoading(true);
-    // const response = await register(data.email, data.password);
-    // setLoading(false);
-    // if (response) {
-    //   Alert.alert("Cadastro realizado com sucesso.");
-    //   navigate("Login");
-    // }
+    const newTarefa = { ...data, share: share, groups: groups }
+    console.log(newTarefa);
+    setLoading(true);
+    const response = await saveTarefa(newTarefa);
+    setLoading(false);
+    if (response) {
+      Alert.alert("Tarefa salva com sucesso.");
+      navigation.goBack();
+    }
   };
 
   let currentSwitchFlagCompleted = watch("flagCompleted");
   let currentSelectedDate = watch("date")
     ? new Date(watch("date")).toLocaleDateString("pt-br")
     : "";
+
+  useEffect(() => setValue('flagCompleted', false), []);
 
   return (
     <KeyboardAvoidingView
@@ -151,7 +156,7 @@ export default function EditaTarefa() {
             isVisible={open}
             mode="date"
             onConfirm={(date) => {
-              setValue("date", date);
+              setValue("date", new Date(date));
               setOpen(false);
             }}
             onCancel={() => setOpen(false)}
@@ -178,28 +183,81 @@ export default function EditaTarefa() {
             <Text>Concluído ?</Text>
           </View>
 
-          <Input name="shareWith" control={control} label="Compartilhar com:" />
+          <TextInput
+            label="Compartilhar com:"
+            onChangeText={setShareWith}
+            mode="outlined"
+          />
 
-          <Button onPress={() => {
-            const value = getValues('shareWith');
-            if (value) {
-              setShare([...share, getValues("shareWith")])
-            } else {
-              Alert.alert("Atenção", "Digite um email para compartilhar a tarefa.");
-            }
-            }}>
+          <Button
+            onPress={(e) => {
+              e.preventDefault();
+              if (shareWith) {
+                setShare([...share, shareWith]);
+                setShareWith("");
+              } else {
+                Alert.alert(
+                  "Atenção",
+                  "Digite um email para compartilhar a tarefa."
+                );
+              }
+            }}
+          >
             Add share
           </Button>
-          <View style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
+          <View
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
             {share &&
               share.map((el, ix) => {
                 return (
                   <Chip
                     key={ix}
-                    compact
                     onClose={() => removeShare(ix)}
-                    style={{ margin: 4, width: "auto"}}
+                    style={{ margin: 4, width: "auto" }}
                     ellipsizeMode="tail"
+                    compact
+                  >
+                    {el}
+                  </Chip>
+                );
+              })}
+          </View>
+
+          <TextInput
+            label="Adicionar grupo:"
+            onChangeText={setGroupInput}
+            mode="outlined"
+          />
+
+          <Button
+            onPress={(e) => {
+              e.preventDefault();
+              if (groupInput) {
+                setGroups([...groups, groupInput]);
+                setGroupInput("");
+              } else {
+                Alert.alert(
+                  "Atenção",
+                  "Digite uma categoria para a tarefa."
+                );
+              }
+            }}
+          >
+            Add grupo
+          </Button>
+          <View
+            style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+          >
+            {groups &&
+              groups.map((el, ix) => {
+                return (
+                  <Chip
+                    key={ix}
+                    onClose={() => removeGroup(ix)}
+                    style={{ margin: 4, width: "auto" }}
+                    ellipsizeMode="tail"
+                    compact
                   >
                     {el}
                   </Chip>

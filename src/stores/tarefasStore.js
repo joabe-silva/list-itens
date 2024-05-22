@@ -30,8 +30,10 @@ const useTarefasStore = create((set, get) => ({
     try {
       await novaTarefa(newTarefa);
       set((state) => ({ tarefas: [...state.tarefas, newTarefa] }));
+      return true;
     } catch (error) {
       Alert.alert("Error", "Erro ao cadastrar tarefa");
+      return false;
     }
   },
   tarefasPendentes: () => {

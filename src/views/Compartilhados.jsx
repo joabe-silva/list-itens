@@ -8,9 +8,16 @@ import {
 import { IconButton, Text } from "react-native-paper";
 import useTarefasStore from "../stores/tarefasStore";
 import { RefreshControl } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Compartilhados() {
-  const { tarefasCompartilhadasComigo, fetchTarefasCompartilhadasComigo, refreshing } = useTarefasStore();
+  const { navigate } = useNavigation();
+
+  const {
+    tarefasCompartilhadasComigo,
+    fetchTarefasCompartilhadasComigo,
+    refreshing,
+  } = useTarefasStore();
 
   useEffect(() => {
     fetchTarefasCompartilhadasComigo();
@@ -24,7 +31,10 @@ export default function Compartilhados() {
       <ScrollView
         style={styles.container}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={fetchTarefasCompartilhadasComigo} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={fetchTarefasCompartilhadasComigo}
+          />
         }
       >
         {tarefasCompartilhadasComigo.length > 0 &&
@@ -36,17 +46,7 @@ export default function Compartilhados() {
         icon={"plus"}
         style={styles.plusButton}
         mode="contained"
-        onPress={() => {
-          const tarefa = {
-            description: "Nova tarefa",
-            title: 'Nova tarefa',
-            date: new Date(),
-            groups: [],
-            share: [],
-            flagCompleted: false,
-          }
-          saveTarefa(tarefa);
-        }}
+        onPress={() => navigate("EditaTarefa")}
       />
     </KeyboardAvoidingView>
   );
