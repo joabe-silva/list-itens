@@ -102,7 +102,6 @@ export default function EditaTarefa({ navigation, route }) {
     let response = false;
     if (params) {
       newTarefa.id = params.id;
-      console.log(newTarefa);
       response = await updateTarefa(newTarefa);
     } else {
       response = await saveTarefa(newTarefa);
@@ -128,10 +127,7 @@ export default function EditaTarefa({ navigation, route }) {
     setValue("flagCompleted", false);
     if (params) {
       setValue("title", params.title);
-      setValue(
-        "date",
-        new Date(params.date.seconds * 1000 + params.date.nanoseconds / 1000000)
-      );
+      setValue("date", new Date(params.date));
       setValue("description", params.description);
       setValue("flagCompleted", params.flagCompleted);
       setGroups(params.groups);

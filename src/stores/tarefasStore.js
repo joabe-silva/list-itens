@@ -13,18 +13,31 @@ const useTarefasStore = create((set, get) => ({
   tarefas: [],
   tarefasCompartilhadasComigo: [],
   refreshing: false,
-  // setTarefas: (tarefas) => set({tarefas: tarefas}),
   fetchTarefas: async () => {
     set({ refreshing: true });
     const user = useUserStore.getState().authenticatedUser;
     let data = await listarTarefasPorUsuario(user);
+    data.forEach((tarefa) => {
+      tarefa.date = new Date(
+        tarefa.date.seconds * 1000 + tarefa.date.nanoseconds / 1000000
+      ).toISOString();
+    });
     set({ tarefas: data, refreshing: false });
   },
   fetchTarefasCompartilhadasComigo: async () => {
     set({ refreshing: true });
     const user = useUserStore.getState().authenticatedUser;
     let data = await listarTarefasCompartilhadas(user);
-    set({ tarefasCompartilhadasComigo: data, refreshing: false });
+    data.forEach((tarefa) => {
+      tarefa.date = new Date(
+        tarefa.date.seconds * 1000 + tarefa.date.nanoseconds / 1000000
+      ).toISOString();
+    });
+    let filteredData = Array.from(data).sort(
+      (tarefa1, tarefa2) =>
+        new Date(tarefa2.date).getTime() - new Date(tarefa1.date).getTime()
+    );
+    set({ tarefasCompartilhadasComigo: filteredData, refreshing: false });
   },
   saveTarefa: async (tarefa) => {
     const user = useUserStore.getState().authenticatedUser;
@@ -63,12 +76,22 @@ const useTarefasStore = create((set, get) => ({
     }
   },
   tarefasPendentes: () => {
-    const tarefas = get().tarefas;
-    return tarefas.filter((tarefa) => !tarefa.flagCompleted);
+    const tarefas = Array.from(get().tarefas);
+    return tarefas
+      .filter((tarefa) => !tarefa.flagCompleted)
+      .sort(
+        (tarefa1, tarefa2) =>
+          new Date(tarefa2.date).getTime() - new Date(tarefa1.date).getTime()
+      );
   },
   tarefasConcluidas: () => {
-    const tarefas = get().tarefas;
-    return tarefas.filter((tarefa) => tarefa.flagCompleted);
+    const tarefas = Array.from(get().tarefas);
+    return tarefas
+      .filter((tarefa) => tarefa.flagCompleted)
+      .sort(
+        (tarefa1, tarefa2) =>
+          new Date(tarefa2.date).getTime() - new Date(tarefa1.date).getTime()
+      );
   },
 }));
 

@@ -7,7 +7,7 @@ const CardTarefa = (props) => {
     <>
       <List.Item
         title={tarefa.title}
-        description={Intl.DateTimeFormat("pt-br").format(new Date())}
+        description={Intl.DateTimeFormat("pt-br").format(new Date(tarefa.date))}
         left={(props) => (
           <List.Icon
             {...props}
