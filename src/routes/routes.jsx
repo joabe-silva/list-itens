@@ -1,4 +1,4 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -9,8 +9,8 @@ import Concluidas from "../views/Concluidas";
 import Estatisticas from "../views/Estatisticas";
 import Login from "../views/Login";
 import Pendentes from "../views/Pendentes";
-import Compartilhados from '../views/Compartilhados';
-import EditaTarefa from '../views/EditaTarefa';
+import Compartilhados from "../views/Compartilhados";
+import EditaTarefa from "../views/EditaTarefa";
 
 const Stack = createStackNavigator();
 
@@ -19,28 +19,34 @@ const Tab = createBottomTabNavigator();
 const MainTab = () => {
   return (
     <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let tabs = {
-              Pendentes: focused ? "time" : "time-outline",
-              Concluidas: focused ? "checkmark-circle" : "checkmark-circle-outline",
-              Compartilhados: focused ? "share-social" : "share-social-outline",
-              Estatisticas: focused ? "stats-chart" : "stats-chart-outline",
-            }
-            // You can return any component that you like here!
-            return <Ionicons name={tabs[route.name]} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: 'purple',
-          tabBarInactiveTintColor: 'gray',
-        })}
-      >
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let tabs = {
+            Pendentes: focused ? "time" : "time-outline",
+            Concluidas: focused
+              ? "checkmark-circle"
+              : "checkmark-circle-outline",
+            Compartilhados: focused ? "share-social" : "share-social-outline",
+            Estatisticas: focused ? "stats-chart" : "stats-chart-outline",
+          };
+          // You can return any component that you like here!
+          return <Ionicons name={tabs[route.name]} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "purple",
+        tabBarInactiveTintColor: "gray",
+      })}
+    >
       <Tab.Screen name="Pendentes" component={Pendentes} />
       <Tab.Screen name="Concluidas" component={Concluidas} />
       <Tab.Screen name="Compartilhados" component={Compartilhados} />
-      <Tab.Screen name="Estatisticas" component={Estatisticas} />
+      <Tab.Screen
+        name="Estatisticas"
+        component={Estatisticas}
+        options={{ headerTitle: "Estatísticas" }}
+      />
     </Tab.Navigator>
   );
-}
+};
 
 export default function Routes() {
   return (
@@ -48,7 +54,11 @@ export default function Routes() {
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Cadastro" component={Cadastro} />
-        <Stack.Screen name="MainTab" component={MainTab} options={{headerShown: false}} />
+        <Stack.Screen
+          name="MainTab"
+          component={MainTab}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="EditaTarefa" component={EditaTarefa} />
       </Stack.Navigator>
     </NavigationContainer>
