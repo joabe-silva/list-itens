@@ -4,11 +4,13 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  View,
 } from "react-native";
 import { IconButton, Text } from "react-native-paper";
 import useTarefasStore from "../stores/tarefasStore";
 import { RefreshControl } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import CardTarefa from "../components/card-tarefa";
 
 export default function Pendentes() {
 
@@ -39,7 +41,12 @@ export default function Pendentes() {
       >
         {visibleTarefas.length > 0 &&
           visibleTarefas.map((tarefa, ix) => {
-            return <Text key={ix}>{tarefa.title}</Text>;
+            return (
+              <View key={ix} >
+                <CardTarefa tarefa={tarefa}/>
+              </View>
+          );
+            // return <Text key={ix}>{tarefa.title}</Text>;
           })}
       </ScrollView>
       <IconButton

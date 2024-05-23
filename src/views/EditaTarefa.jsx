@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import { useController, useForm } from "react-hook-form";
 import {
   Alert,
@@ -8,16 +8,16 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import DateTimePicker from "react-native-modal-datetime-picker";
 import {
   Button,
   Chip,
+  IconButton,
   HelperText,
   Switch,
   Text,
   TextInput,
 } from "react-native-paper";
-import { useEffect, useState } from "react";
-import DateTimePicker from "react-native-modal-datetime-picker";
 import useTarefasStore from "../stores/tarefasStore";
 
 const Input = ({
@@ -60,10 +60,10 @@ const Input = ({
   );
 };
 
-export default function EditaTarefa({ navigation }) {
-  const { saveTarefa } = useTarefasStore();
+export default function EditaTarefa({ navigation, route }) {
+  const { params } = route;
 
-  // const { navigate } = useNavigation();
+  const { saveTarefa, updateTarefa, removeTarefa } = useTarefasStore();
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -98,9 +98,15 @@ export default function EditaTarefa({ navigation }) {
 
   const onRegisterSubmit = async (data) => {
     const newTarefa = { ...data, share: share, groups: groups };
-    console.log(newTarefa);
     setLoading(true);
-    const response = await saveTarefa(newTarefa);
+    let response = false;
+    if (params) {
+      newTarefa.id = params.id;
+      console.log(newTarefa);
+      response = await updateTarefa(newTarefa);
+    } else {
+      response = await saveTarefa(newTarefa);
+    }
     setLoading(false);
     if (response) {
       Alert.alert("Tarefa salva com sucesso.");
@@ -108,12 +114,30 @@ export default function EditaTarefa({ navigation }) {
     }
   };
 
+  const handlingRemoveTarefa = async (tarefa) => {
+    await removeTarefa(tarefa);
+    navigation.goBack();
+  };
+
   let currentSwitchFlagCompleted = watch("flagCompleted");
   let currentSelectedDate = watch("date")
     ? new Date(watch("date")).toLocaleDateString("pt-br")
     : "";
 
-  useEffect(() => setValue("flagCompleted", false), []);
+  useEffect(() => {
+    setValue("flagCompleted", false);
+    if (params) {
+      setValue("title", params.title);
+      setValue(
+        "date",
+        new Date(params.date.seconds * 1000 + params.date.nanoseconds / 1000000)
+      );
+      setValue("description", params.description);
+      setValue("flagCompleted", params.flagCompleted);
+      setGroups(params.groups);
+      setShare(params.share);
+    }
+  }, []);
 
   return (
     <KeyboardAvoidingView
@@ -156,7 +180,7 @@ export default function EditaTarefa({ navigation }) {
             isVisible={open}
             mode="date"
             onConfirm={(date) => {
-              setValue("date", new Date(date));
+              setValue("date", date);
               setOpen(false);
             }}
             onCancel={() => setOpen(false)}
@@ -272,6 +296,17 @@ export default function EditaTarefa({ navigation }) {
           >
             Salvar
           </Button>
+          {params && (
+            <Button
+              mode="contained"
+              buttonColor="red"
+              style={{ marginTop: 5, marginBottom: 30 }}
+              onPress={() => handlingRemoveTarefa(params)}
+              loading={loading}
+            >
+              Excluir
+            </Button>
+          )}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -288,7 +323,7 @@ const styles = StyleSheet.create({
     padding: 18,
   },
   btn: {
-    marginBottom: 30,
+    marginBottom: 5,
     marginTop: 30,
   },
 });

@@ -3,6 +3,8 @@ import {
   listarTarefasPorUsuario,
   listarTarefasCompartilhadas,
   novaTarefa,
+  editaTarefa,
+  excluiTarefa,
 } from "../database/repositories/tarefas";
 import useUserStore from "./userStore";
 import { Alert } from "react-native";
@@ -33,6 +35,30 @@ const useTarefasStore = create((set, get) => ({
       return true;
     } catch (error) {
       Alert.alert("Error", "Erro ao cadastrar tarefa");
+      return false;
+    }
+  },
+  updateTarefa: async (tarefa) => {
+    try {
+      await editaTarefa(tarefa);
+      const tarefas = get().tarefas;
+      const filteredTarefas = tarefas.filter((t) => t.id != tarefa.id);
+      set((state) => ({ tarefas: [...filteredTarefas, tarefa] }));
+      return true;
+    } catch (error) {
+      Alert.alert("Error", "Erro ao editar tarefa");
+      return false;
+    }
+  },
+  removeTarefa: async (tarefa) => {
+    try {
+      await excluiTarefa(tarefa);
+      const tarefas = get().tarefas;
+      const filteredTarefas = tarefas.filter((t) => t.id != tarefa.id);
+      set((state) => ({ tarefas: [...filteredTarefas] }));
+      return true;
+    } catch (error) {
+      Alert.alert("Error", "Erro ao excluir tarefa");
       return false;
     }
   },
