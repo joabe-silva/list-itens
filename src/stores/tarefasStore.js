@@ -54,9 +54,11 @@ const useTarefasStore = create((set, get) => ({
   updateTarefa: async (tarefa) => {
     try {
       await editaTarefa(tarefa);
-      const tarefas = get().tarefas;
+      const tarefas = Array.from(get().tarefas);
       const filteredTarefas = tarefas.filter((t) => t.id != tarefa.id);
-      set((state) => ({ tarefas: [...filteredTarefas, tarefa] }));
+      await get().fetchTarefas();
+      await get().fetchTarefasCompartilhadasComigo();
+      // set((state) => ({ tarefas: [...filteredTarefas, tarefa] }));
       return true;
     } catch (error) {
       Alert.alert("Error", "Erro ao editar tarefa");
@@ -68,7 +70,9 @@ const useTarefasStore = create((set, get) => ({
       await excluiTarefa(tarefa);
       const tarefas = get().tarefas;
       const filteredTarefas = tarefas.filter((t) => t.id != tarefa.id);
-      set((state) => ({ tarefas: [...filteredTarefas] }));
+      await get().fetchTarefas();
+      await get().fetchTarefasCompartilhadasComigo();
+      // set((state) => ({ tarefas: [...filteredTarefas] }));
       return true;
     } catch (error) {
       Alert.alert("Error", "Erro ao excluir tarefa");
