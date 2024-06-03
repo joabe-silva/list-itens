@@ -66,6 +66,8 @@ export default function Estatisticas() {
           center={[5, 10]}
           absolute
         />
+        <Divider />
+        
       </ScrollView>
     </KeyboardAvoidingView>
   );

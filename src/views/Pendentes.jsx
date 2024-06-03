@@ -31,6 +31,8 @@ export default function Pendentes() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
+
+      
       style={{ height: "100%" }}
     >
       <ScrollView
