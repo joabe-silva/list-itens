@@ -49,7 +49,7 @@ export default function Estatisticas() {
       <ScrollView style={styles.container}>
         <Card mode="outlined">
           <Card.Title
-            title={Array.from(tarefas).length}
+            title={Array.from(tarefas).length || "0"}
             titleVariant="displayLarge"
             subtitle={`Tarefas cadastradas`}
           />
@@ -67,7 +67,6 @@ export default function Estatisticas() {
           absolute
         />
         <Divider />
-        
       </ScrollView>
     </KeyboardAvoidingView>
   );
